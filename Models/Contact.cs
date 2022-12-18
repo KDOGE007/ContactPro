@@ -53,7 +53,7 @@ namespace ContactPro.Models
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime? Creeated { get; set; }
+        public DateTime? Created { get; set; }
 
         //Image properties
         public byte[]? ImageData { get; set; }

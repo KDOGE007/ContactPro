@@ -160,7 +160,7 @@ namespace ContactPro.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("Creeated")
+                    b.Property<DateTime?>("Created")
                         .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
