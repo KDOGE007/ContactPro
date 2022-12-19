@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using ContactPro.Data;
 using ContactPro.Models;
 using ContactPro.Enums;
+using ContactPro.Services.Interfaces;
+using ContactPro.Services;
 using System.Drawing.Printing;
 
 namespace ContactPro.Controllers
@@ -18,12 +20,16 @@ namespace ContactPro.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IImageService _imageService;
 
         //inject the above variables so that all the database information can be use in this contorller.
-        public ContactsController(ApplicationDbContext context, UserManager<AppUser> userManager)
+        public ContactsController(ApplicationDbContext context, 
+                                  UserManager<AppUser> userManager,
+                                  IImageService imageService)
         {
             _context = context;
             _userManager = userManager;
+            _imageService = imageService;
         }
 
         // GET: Contacts
@@ -82,6 +88,12 @@ namespace ContactPro.Controllers
                 if (contact.BirthDate != null)
                 {
                     contact.BirthDate = DateTime.SpecifyKind(contact.BirthDate.Value, DateTimeKind.Utc);
+                }
+
+                if (contact.ImageFile != null)
+                {
+                    contact.ImageData = await _imageService.ConvertFileToByteArrayAsync(contact.ImageFile);
+                    contact.ImageType = contact.ImageFile.ContentType;
                 }
 
                 _context.Add(contact);
