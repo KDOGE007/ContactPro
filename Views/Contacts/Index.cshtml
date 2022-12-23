@@ -23,6 +23,7 @@
                        type="search"
                        name="searchString"
                        placeholder="Search Term" />
+
                 <input type="submit"
                        class="btn btn-outline-primary"
                        value="Search" />
@@ -32,7 +33,7 @@
             <div class="mt-5">
                 <label class="form-label fw-bold">CATEGORY FILTER</label>
 
-                <select name="id"
+                <select name="categoryId"
                         asp-items="@ViewBag.CategoryId"
                         class="form-control"
                         onchange="this.form.submit()"
@@ -49,18 +50,20 @@
                 <div class="col">
                     <div class="card mb-3">
                         <div class="row g-0">
+
                             <div class="col-md-4 square-img-container">
                                 <img src="@ImageService.ConvertByteArrayToFile(contact.ImageData!, contact.ImageType!)"
                                  class="square-img rounded-start" />
                             </div>
+
                             <div class="col-md-8">
                                 <div class="card-body">
                                     <h5 class="card-title">@Html.DisplayFor(modelItem => contact.FullName)</h5>
+
                                     <address class="card-text">
                                         @Html.DisplayFor(modelItem => contact.Address1)<br />
                                         @Html.DisplayFor(modelItem => contact.Address2)<br />
                                         @Html.DisplayFor(modelItem => contact.City), @Html.DisplayFor(modelItem => contact.State) @Html.DisplayFor(modelItem => contact.PostalCode)
-
                                     </address>
                                     <div class="card-text">
                                         <span class="fw-bold me-2">Phone:</span>@Html.DisplayFor(modelItem => contact.PhoneNumber)
@@ -73,6 +76,7 @@
                                         <a class="me-3 editIcons" href="#"><i class="bi bi-envelope-fill"></i></a>
                                         <a class="me-3 editIcons" asp-action="Delete" asp-route-id="@contact.Id"><i class="bi bi-trash-fill text-danger"></i></a>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
