@@ -77,7 +77,7 @@ namespace ContactPro.Controllers
         public IActionResult SearchContacts(string searchString)
         {
             string appUserId = _userManager.GetUserId(User);
-            var contacts = new List<Contact> ();
+            var contacts = new List<Contact>();
 
             AppUser appUser = _context.Users
                                       .Include(c => c.Contacts)
@@ -189,12 +189,18 @@ namespace ContactPro.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts.FindAsync(id);
+            string appUserId = _userManager.GetUserId(User);
+
+            //var contact = await _context.Contacts.FindAsync(id);
+            //prevent ID spoofing
+            var contact = await _context.Contacts.Where(c => c.Id == id && c.AppUserID == appUserId).FirstOrDefaultAsync();
             if (contact == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserID"] = new SelectList(_context.Users, "Id", "Id", contact.AppUserID);
+            ViewData["StatesList"] = new SelectList(Enum.GetValues(typeof(States)).Cast<States>().ToList());
+            ViewData["CategoryList"] = new MultiSelectList(await _addressBookService.GetUserCategoriesAsync(appUserId), "Id", "Name", await _addressBookService.GetContactCategoryIdAsync(contact.Id));
+
             return View(contact);
         }
 

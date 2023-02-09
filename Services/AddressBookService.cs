@@ -28,18 +28,18 @@ namespace ContactPro.Services
                     Contact? contact = await _context.Contacts.FindAsync(contactId);
                     Category? category = await _context.Categories.FindAsync(categoryId);
 
-                    if(category != null && contact != null) 
-                    { 
+                    if (category != null && contact != null)
+                    {
                         category.Contacts.Add(contact);
                         await _context.SaveChangesAsync();
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-            
+
         }
 
         public Task<ICollection<Category>> GetContactCategoriesdAsync(int contactId)
@@ -47,9 +47,19 @@ namespace ContactPro.Services
             throw new NotImplementedException();
         }
 
-        public Task<ICollection<int>> GetContactCategoryIdAsync(int contactId)
+        public async Task<ICollection<int>> GetContactCategoryIdAsync(int contactId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var contact = await _context.Contacts.Include(c => c.Categories)
+                                        .FirstOrDefaultAsync(c => c.Id == contactId);
+                List<int> catogoryIds = contact.Categories.Select(c => c.Id).ToList();
+                return catogoryIds;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Category>> GetUserCategoriesAsync(string userId)
