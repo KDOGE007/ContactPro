@@ -42,9 +42,14 @@ namespace ContactPro.Services
 
         }
 
-        public Task<ICollection<Category>> GetContactCategoriesdAsync(int contactId)
+        public async Task<ICollection<Category>> GetContactCategoriesdAsync(int contactId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Contact? contact = await _context.Contacts.Include(c => c.Categories).FirstOrDefaultAsync(c => c.Id == contactId);
+                return contact.Categories;
+            }
+            catch (Exception) { throw; }
         }
 
         public async Task<ICollection<int>> GetContactCategoryIdAsync(int contactId)
@@ -85,13 +90,27 @@ namespace ContactPro.Services
 
             return await _context.Categories
                                  .Include(c => c.Contacts)
-                                 .Where(c => c.Id == contactId && c.Contacts.Contains(contact))
+                                 .Where(c => c.Id == categoryId && c.Contacts.Contains(contact))
                                  .AnyAsync();
         }
 
-        public Task RemoveContactFromCategoryAsync(int categoryId, int contactId)
+        public async Task RemoveContactFromCategoryAsync(int categoryId, int contactId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (await IsContactInCategory(categoryId, contactId))
+                {
+                    Contact? contact = await _context.Contacts.FindAsync(contactId);
+                    Category? category = await _context.Categories.FindAsync(categoryId);
+
+                    if (category != null && contact != null)
+                    {
+                        category.Contacts.Remove(contact);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception) { throw; }
         }
 
         public IEnumerable<Contact> SearchForContacts(string searchString, string usedId)
