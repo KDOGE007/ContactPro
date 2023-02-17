@@ -56,11 +56,11 @@ namespace ContactPro.Controllers
 
             var categories = appUser.Categories;
 
-            //default dropdown view
+            //default view
             if (categoryId == 0)
             {
                 contacts = appUser.Contacts.OrderBy(c => c.LastName)
-                                  .ThenBy(c => c.LastName)
+                                  .ThenBy(c => c.FirstName)
                                   .ToList();
             }
             //new view once a category is selected
@@ -69,7 +69,7 @@ namespace ContactPro.Controllers
                 contacts = appUser.Categories.FirstOrDefault(c => c.Id == categoryId)!
                                   .Contacts
                                   .OrderBy(c => c.LastName)
-                                  .ThenBy(c => c.LastName)
+                                  .ThenBy(c => c.FirstName)
                                   .ToList();
             }
 
