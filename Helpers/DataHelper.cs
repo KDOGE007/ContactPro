@@ -7,10 +7,10 @@ namespace ContactPro.Helpers
     {
         public static async Task ManageDataAsync(IServiceProvider svcProvider)
         {
-            //get an instance of the db application context
+            //Service: An instance of db context
             var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
 
-            //migration: this is equivalent to update-database
+            //Migration: This is the programmatic equivalent to Update-Database
             await dbContextSvc.Database.MigrateAsync();
         }
     }
